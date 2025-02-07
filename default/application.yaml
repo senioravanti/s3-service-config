@@ -1,0 +1,61 @@
+server:
+  port: ${S3_SERVICE_PORT:8006}
+  servlet:
+    context-path: '/api'
+
+
+spring:
+  cloud:
+    loadbalancer.ribbon.enabled: false
+
+  servlet:
+    multipart:
+      enabled: true
+      # по умолчанию 10 мб
+      max-file-size: '${MAX_FILE_SIZE:1GB}'
+      max-request-size: '${MAX_REQUEST_SIZE:1GB}'
+
+  security.oauth2.resourceserver:
+    jwt:
+      issuer-uri: '${KEYCLOAK_URI:http://localhost:8080}'
+      jws-algorithms: RS256
+      jwk-set-uri: '${KEYCLOAK_URI:http://localhost:8080}/protocol/openid-connect/certs'
+
+
+springdoc:
+  swagger-ui:
+    enabled: true
+
+
+minio:
+#  access-key: CLOOXK6dI6hmSYZ3VL8f
+  access-key: ${MINIO_ACCESS_KEY}
+#  secret-key: sOaJV7iqiTaeA0QPNYY9ykN5tgUZknIr543lheZZ
+  secret-key: ${MINIO_SECRET_KEY}
+  url: '${MINIO_URI:http://localhost:9000}'
+
+
+logging:
+  pattern:
+    console: '%d{dd.MM.yyyy HH:mm:ss} %-5level [%t]: %class{10} %M --- %msg%n'
+
+  charset:
+    console: UTF-8
+
+  level:
+    ru.manannikov.filesharingservice.s3: DEBUG
+
+
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  allowed-origins: '${ALLOWED_ORIGINS:*}'
